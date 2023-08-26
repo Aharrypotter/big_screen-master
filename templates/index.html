@@ -78,9 +78,9 @@
       <ul class="clearfix">
         <li>
           <div class="boxall">
-              <div class="alltitle">{{form.echarts3_1.title}}</div>
-              <div class="allnav" id="fb1"></div>
-              <div class="boxfoot"></div>
+            <div class="alltitle">{{form.echarts3_1.title}}</div>
+            <div class="allnav" id="fb1"></div>
+            <div class="boxfoot"></div>
             <div class="boxfoot"></div>
           </div>
         </li>
@@ -107,14 +107,6 @@
           // 基于准备好的dom，初始化echarts实例
           var myChart = echarts.init(document.getElementById('fb1'));
           option = {
-      	  //   title: [{
-          //     text: '{{form.echarts3_1.title}}',
-          //     left: 'center',
-          //     textStyle: {
-          //         color: '#fff',
-      		// 	fontSize:'16'
-          //     }
-          // }],
           tooltip: {
               trigger: 'item',
               formatter: "{a} <br/>{b}: {c} ({d}%)",
@@ -124,8 +116,6 @@
           },
           legend: {
               top:'0%',
-              // itemWidth: 10,
-              // itemHeight: 10,
               data:{{form.echarts3_1.xAxis|safe}},
               textStyle: {
                   color: 'rgba(255,255,255,.5)',
@@ -135,13 +125,19 @@
           series: [
               {
               	name:'{{form.echarts3_1.title}}',
-                  type:'pie',
-      			// center: ['50%', '100%'],
-                  // radius: ['25%', '50%'],
-                        color: ['#065aab', '#066eab', '#0682ab', '#0696ab', '#06a0ab','#06b4ab','#06c8ab','#06dcab','#06f0ab'],
-                  label: {show:false},
-      			labelLine: {show:false},
-                  data:{{form.echarts3_1.data|safe}}
+                type:'pie',
+                color: ['#065aab', '#066eab', '#0682ab', '#0696ab', '#06a0ab','#06b4ab','#06c8ab','#06dcab','#06f0ab'],
+                label: {
+                  show: true,  // 显示标签
+                  position: 'inside',  // 标签显示在饼图内部
+                  formatter: '{b}:{d}%',  // 设置标签的显示格式
+                  textStyle: {
+                    color: 'rgba(255,255,255,.5)',  // 标签文字颜色
+                    fontSize:'14',
+                  }
+                },
+                labelLine: {show:false},
+                data:{{form.echarts3_1.data|safe}}
               }
           ]
       };
@@ -204,6 +200,8 @@
           }],
           yAxis: [{
               type: 'value',
+              min: 0,         // 设置最小值为0
+              max: 100,      // 设置最大值为100
               axisTick: {show: false},
               axisLine: {
                   lineStyle: {
@@ -211,6 +209,7 @@
                   }
               },
               axisLabel:  {
+                  formatter: '{value}%',  // 设置刻度标签的格式为百分比形式
                   textStyle: {
                       color: "rgba(255,255,255,.6)",
                       fontSize:12,
@@ -220,7 +219,7 @@
                   lineStyle: {
                        color: 'rgba(255,255,255,.1)'
                   }
-              }
+              },
           }],
           series: [
       	{
