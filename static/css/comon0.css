@@ -226,7 +226,7 @@ a:hover {
 }
 
 .piechart {
-  height: 6rem;
+  height: 4.9rem;
   float: none;
   left: 2%;
   width: 37%;
@@ -235,7 +235,7 @@ a:hover {
   background: rgba(255, 255, 255, 0.04) url(../images/line.png);
   background-size: 100% auto;
   position: relative;
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.1rem;
   z-index: 10;
 }
 .piechart:before,
@@ -259,7 +259,7 @@ a:hover {
 }
 
 .barchart {
-	height: 6rem;
+	height: 4.9rem;
 	float: left;
 	left: 2%;
 	width: 37%;
@@ -268,9 +268,8 @@ a:hover {
   background: rgba(255, 255, 255, 0.04) url(../images/line.png);
   background-size: 100% auto;
   position: relative;
-  margin-top: 0.15rem; 
+  margin-top: 0.1rem; 
   z-index: 10;
-  overflow: hidden;
 }
 .barchart:before,
 .barchart:after {
@@ -293,7 +292,7 @@ a:hover {
 }
 
 .linechart {
-	height: 9.5rem;
+	height: 10rem;
 	float: right;
 	right: 2%;
 	width: 57%;
@@ -302,7 +301,7 @@ a:hover {
   background: rgba(255, 255, 255, 0.04) url(../images/line.png);
   background-size: 100% auto;
   position: relative;
-  margin-bottom: 0.15rem;
+  margin-top: -5rem;
   z-index: 10;
 }
 .linechart:before,
