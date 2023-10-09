@@ -85,6 +85,14 @@
           </div>
         </li>
         <li>
+          <div class="boxall">
+            <div class="alltitle">{{form.echarts3_2.title}}</div>
+            <div class="allnav" id="fb2"></div>
+            <div class="boxfoot"></div>
+            <div class="boxfoot"></div>
+          </div>
+        </li>
+        <li>
           <div class="map">
             <div class="map1"><img src="../static/picture/lbx.png" /></div>
             <div class="map2"><img src="../static/picture/jt.png" /></div>
@@ -142,6 +150,90 @@
           ]
       };
           // 使用刚指定的配置项和数据显示图表。
+          myChart.setOption(option);
+          window.addEventListener("resize",function(){
+              myChart.resize();
+          });
+      })
+    </script>
+    <!-- echart3_2 -->
+    <script>
+      $(function echarts_32() {
+          var myChart = echarts.init(document.getElementById('fb2'));
+          option = {
+              tooltip: {
+                  trigger: 'axis',
+                  axisPointer: {
+                      type: 'shadow'
+                  }
+              },
+              legend: {
+                  top:'0%',
+                  data: {{form.echarts3_2.xAxis|safe}},
+                  textStyle: {
+                      color: 'rgba(255,255,255,.5)',
+                      fontSize:'12',
+                  }
+              },
+              grid: {
+                  left: '3%',
+                  right: '4%',
+                  bottom: '3%',
+                  containLabel: true
+              },
+              xAxis: {
+                  type: 'category',
+                  data: {{form.echarts3_2.data|safe}},
+                  axisLine: {
+                      lineStyle: {
+                          color: 'rgba(255,255,255,.5)',
+                      }
+                  },
+                  axisLabel: {
+                      textStyle: {
+                          color: 'rgba(255,255,255,.5)',
+                          fontSize:'12',
+                      }
+                  }
+              },
+              yAxis: {
+                  type: 'value',
+                  axisLine: {
+                      lineStyle: {
+                          color: 'rgba(255,255,255,.5)',
+                      }
+                  },
+                  axisLabel: {
+                      textStyle: {
+                          color: 'rgba(255,255,255,.5)',
+                          fontSize:'12',
+                      }
+                  },
+                  splitLine: {
+                      lineStyle: {
+                          color: 'rgba(255,255,255,.1)',
+                      }
+                  }
+              },
+              series: [
+                  {
+                      name: '{{form.echarts3_2.title}}',
+                      type: 'bar',
+                      barWidth: '60%',
+                      color: ['#065aab', '#066eab', '#0682ab', '#0696ab', '#06a0ab','#06b4ab','#06c8ab','#06dcab','#06f0ab'],
+                      label: {
+                        show: true,  // 显示标签
+                        position: 'inside',  // 标签显示在饼图内部
+                        formatter: '{b}:{d}%',  // 设置标签的显示格式
+                        textStyle: {
+                          color: 'rgba(255,255,255,.5)',  // 标签文字颜色
+                          fontSize:'14',
+                        }
+                      },
+                      data: {{form.echarts3_2.data|safe}}
+                  }
+              ]
+          };
           myChart.setOption(option);
           window.addEventListener("resize",function(){
               myChart.resize();
