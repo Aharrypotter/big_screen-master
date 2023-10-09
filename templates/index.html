@@ -77,22 +77,6 @@
     <div class="mainbox">
       <ul class="clearfix">
         <li>
-          <div class="boxall">
-            <div class="alltitle">{{form.echarts3_1.title}}</div>
-            <div class="allnav" id="fb1"></div>
-            <div class="boxfoot"></div>
-            <div class="boxfoot"></div>
-          </div>
-        </li>
-        <li>
-          <div class="boxall">
-            <div class="alltitle">{{form.echarts3_2.title}}</div>
-            <div class="allnav" id="fb2"></div>
-            <div class="boxfoot"></div>
-            <div class="boxfoot"></div>
-          </div>
-        </li>
-        <li>
           <div class="map">
             <div class="map1"><img src="../static/picture/lbx.png" /></div>
             <div class="map2"><img src="../static/picture/jt.png" /></div>
@@ -100,11 +84,33 @@
           </div>
         </li>
         <li>
-          <div class="linechart">
-            <div class="alltitle">{{form.echart4.title}}</div>
-            <div class="allnav" id="echart4"></div>
-            <div class="boxfoot"></div>
-          </div>
+            <div class="boxall">
+              <div class="piechart">
+                <div class="alltitle">{{form.echarts3_1.title}}</div>
+                <div class="allnav" id="fb1"></div>
+                <div class="boxfoot"></div>
+                <div class="boxfoot"></div>
+              </div>
+            </div>
+        </li>
+        <li>
+            <div class="boxall">
+              <div class="barchart">
+                <div class="barchart">{{form.echarts3_2.title}}</div>
+                <div class="allnav" id="fb2" ></div>
+                <div class="boxfoot"></div>
+                <div class="boxfoot"></div>
+              </div>
+            </div>
+        </li>
+        <li>
+            <div class="boxall">
+                <div class="linechart">
+                <div class="alltitle">{{form.echart4.title}}</div>
+                <div class="allnav" id="echart4"></div>
+                <div class="boxfoot"></div>
+                </div>
+            </div>
         </li>
       </ul>
     </div>
@@ -168,7 +174,7 @@
                   }
               },
               legend: {
-                  top:'0%',
+                  // top:'0%',
                   data: {{form.echarts3_2.xAxis|safe}},
                   textStyle: {
                       color: 'rgba(255,255,255,.5)',
@@ -176,9 +182,9 @@
                   }
               },
               grid: {
-                  left: '3%',
-                  right: '4%',
-                  bottom: '3%',
+                  // left: '3%',
+                  // right: '4%',
+                  // bottom: '3%',
                   containLabel: true
               },
               xAxis: {
@@ -219,11 +225,12 @@
                   {
                       name: '{{form.echarts3_2.title}}',
                       type: 'bar',
-                      barWidth: '60%',
+                      barWidth: '100%', //柱子宽度
+                      // barGap: 1, //柱子之间间距
                       color: ['#065aab', '#066eab', '#0682ab', '#0696ab', '#06a0ab','#06b4ab','#06c8ab','#06dcab','#06f0ab'],
                       label: {
                         show: true,  // 显示标签
-                        position: 'inside',  // 标签显示在饼图内部
+                        position: 'inside',  // 标签显示在直方图内部
                         formatter: '{b}:{d}%',  // 设置标签的显示格式
                         textStyle: {
                           color: 'rgba(255,255,255,.5)',  // 标签文字颜色
