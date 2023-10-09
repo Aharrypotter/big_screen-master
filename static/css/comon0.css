@@ -182,16 +182,12 @@ a:hover {
 .mainbox > ul > li {
   padding: 0 0.1rem;
 }
-.mainbox > ul > li:nth-child(2) {
+.mainbox > ul > li:nth-child(1) {
   width: 40%;
   padding: 0;
 }
 
 .boxall {
-  height: 9.5rem;
-  float: left;
-  left: 2%;
-  width: 37%;
   border: 1px solid rgba(25, 186, 139, 0.17);
   padding: 0 0.2rem 0.4rem 0.15rem;
   background: rgba(255, 255, 255, 0.04) url(../images/line.png);
@@ -219,37 +215,104 @@ a:hover {
   border-right: 2px solid #02a6b5;
   right: 0;
 }
+
 .linechart {
 	height: 9.5rem;
 	float: right;
 	right: 2%;
 	width: 57%;
-	border: 1px solid rgba(25, 186, 139, 0.17);
-	padding: 0 0.2rem 0.4rem 0.15rem;
-	background: rgba(255, 255, 255, 0.04) url(../images/line.png);
-	background-size: 100% auto;
-	position: relative;
-	margin-bottom: 0.15rem;
-	z-index: 10;
+  border: 1px solid rgba(25, 186, 139, 0.17);
+  padding: 0 0.2rem 0.4rem 0.15rem;
+  background: rgba(255, 255, 255, 0.04) url(../images/line.png);
+  background-size: 100% auto;
+  position: relative;
+  margin-bottom: 0.15rem;
+  z-index: 10;
 }
 .linechart:before,
 .linechart:after {
-position: absolute;
-width: 0.1rem;
-height: 0.1rem;
-content: "";
-border-top: 2px solid #02a6b5;
-top: 0;
+  position: absolute;
+  width: 0.1rem;
+  height: 0.1rem;
+  content: "";
+  border-top: 2px solid #02a6b5;
+  top: 0;
 }
 .linechart:before,
 .boxfoot:before {
-	border-left: 2px solid #02a6b5;
-	left: 0;
+  border-left: 2px solid #02a6b5;
+  left: 0;
 }
 .linechart:after,
 .boxfoot:after {
-	border-right: 2px solid #02a6b5;
-	right: 0;
+  border-right: 2px solid #02a6b5;
+  right: 0;
+}
+
+.piechart {
+  height: 6rem;
+  float: left;
+  left: 2%;
+  width: 37%;
+  border: 1px solid rgba(25, 186, 139, 0.17);
+  padding: 0 0.2rem 0.4rem 0.15rem;
+  background: rgba(255, 255, 255, 0.04) url(../images/line.png);
+  background-size: 100% auto;
+  position: relative;
+  margin-bottom: 0.15rem;
+  z-index: 10;
+}
+.piechart:before,
+.piechart:after {
+  position: absolute;
+  width: 0.1rem;
+  height: 0.1rem;
+  content: "";
+  border-top: 2px solid #02a6b5;
+  top: 0;
+}
+.piechart:before,
+.boxfoot:before {
+  border-left: 2px solid #02a6b5;
+  left: 0;
+}
+.piechart:after,
+.boxfoot:after {
+  border-right: 2px solid #02a6b5;
+  right: 0;
+}
+
+.barchart {
+	height: 9.5rem;
+	float: right;
+	right: 2%;
+	width: 57%;
+  border: 1px solid rgba(25, 186, 139, 0.17);
+  padding: 0 0.2rem 0.4rem 0.15rem;
+  background: rgba(255, 255, 255, 0.04) url(../images/line.png);
+  background-size: 100% auto;
+  position: relative;
+  margin-bottom: 0.15rem;
+  z-index: 10;
+}
+.barchart:before,
+.barchart:after {
+  position: absolute;
+  width: 0.1rem;
+  height: 0.1rem;
+  content: "";
+  border-top: 2px solid #02a6b5;
+  top: 0;
+}
+.barchart:before,
+.boxfoot:before {
+  border-left: 2px solid #02a6b5;
+  left: 0;
+}
+.barchart:after,
+.boxfoot:after {
+  border-right: 2px solid #02a6b5;
+  right: 0;
 }
 
 .alltitle {
