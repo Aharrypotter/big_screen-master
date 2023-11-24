@@ -1,20 +1,14 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# @Time : 2020/8/26 14:48
-# @Author : way
-# @Site :
-# @Describe:
-
 from flask import Flask, render_template
 from data import SourceData
-
+from back import back_bp, start_threads
 app = Flask(__name__)
-
+app.register_blueprint(back_bp)
 
 @app.route('/')
 def index():
     data = SourceData()
-    return render_template('index.html', form=data, title=data.title)
+    start_threads()
+    return render_template('index.html', form=data, title='空间利用率情况展示')
 
 
 if __name__ == "__main__":
