@@ -7,20 +7,25 @@ import schedule
 import statistics
 
 # Global variables
-total_inlib, total_seats, data_points
+# total_inlib = 0
+# total_seats = 5190
+# data_points
 
 # Connect to SQL Server
-server = 'localhost'
+server = '172.16.1.16'
 database = 'skedb2020'
-username = 'username'
-password = 'password'
-cnxn = pyodbc.connect(f'DRIVER=ODBC Driver 17 for SQL Server;SERVER={server};DATABASE={database};UID={username};PWD={password}')
+username = 'skevisit'
+password = 'skevisit_2017'
+connectionString = f'DRIVER=ODBC Driver 17 for SQL Server;SERVER={server};DATABASE={database};UID={username};PWD={password}'
+cnxn = pyodbc.connect(connectionString)
+
+view_name = "todayinoutnum"
 
 # Function to query and calculate utilization rate from SQL Server
 def query_sql_server():
     global total_inlib, total_seats
     cursor = cnxn.cursor()
-    cursor.execute('SELECT SUM(inlibrary) as total_inlib FROM inlibrary')
+    cursor.execute(f'SELECT SUM(inlibrary) as total_inlib FROM {view_name}')
     total_inlib = cursor.fetchall()[0][0]
     total_seats = 5190  # Change this number to the actual number of seats in the library
 
@@ -69,7 +74,7 @@ back_bp = Blueprint('back', __name__)
 def send_dept_inlib():
     # Read departmental in-library numbers from SQL Server
     cursor = cnxn.cursor()
-    cursor.execute('SELECT dept, inlibrary FROM inlibrary')
+    cursor.execute(f'SELECT dept, inlibrary FROM {view_name}')
     dept_inlib = cursor.fetchall()
     
     data = []
@@ -89,6 +94,7 @@ def send_dept_inlib():
 # Route for sending library stats to frontend
 @back_bp.route('/api/library_stats')
 def send_library_stats():
+    global total_inlib
     data = [
         {"name": "在馆人数", "value": total_inlib},
         {"name": "空闲座位数", "value": total_seats - total_inlib}
@@ -96,7 +102,8 @@ def send_library_stats():
     echart = {
         'title': '当前图书馆在馆人数情况',
         'xAxis': [i.get("name") for i in data],
-        'data': data,
+        # 'data': [i.get("value") for i in data],
+        'data': data, #去查看echart示例，看看官方是如何调用数据的（调用数据的格式）
     }
     return jsonify(echart)
 
