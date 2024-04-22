@@ -1,5 +1,5 @@
 import pyodbc
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import jsonify, Blueprint
 import threading
 import time
@@ -18,8 +18,10 @@ username = 'skevisit'
 password = 'skevisit_2017'
 connectionString = f'DRIVER=ODBC Driver 17 for SQL Server;SERVER={server};DATABASE={database};UID={username};PWD={password}'
 cnxn = pyodbc.connect(connectionString)
+cnxn_daily = pyodbc.connect(connectionString)
 
 view_name = "todayinoutnum"
+table_name = "vw_day_stat_in"
 
 # Function to query and calculate utilization rate from SQL Server
 def query_sql_server():
@@ -28,7 +30,7 @@ def query_sql_server():
     cursor.execute(f'SELECT SUM(inlibrary) as total_inlib FROM {view_name}')
     total_inlib = cursor.fetchall()[0][0]
     total_seats = 5190  # Change this number to the actual number of seats in the library
-
+    
 # Function to store data and time to local sqlite database
 def store_to_sqlite():
     global total_inlib, data_points
@@ -94,7 +96,11 @@ def send_dept_inlib():
 # Route for sending library stats to frontend
 @back_bp.route('/api/library_stats')
 def send_library_stats():
-    global total_inlib
+    global total_inlib, total_seats
+    total_seats = 5190
+    cursor = cnxn.cursor()
+    cursor.execute(f'SELECT SUM(inlibrary) as total_inlib FROM {view_name}')
+    total_inlib = cursor.fetchall()[0][0]
     data = [
         {"name": "在馆人数", "value": total_inlib},
         {"name": "空闲座位数", "value": total_seats - total_inlib}
@@ -120,4 +126,42 @@ def send_hourly_utilization():
         'xAxis': ['08h', '09h', '11h', '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h'],
         'data': averages_list,
     }
+    return jsonify(echart)
+
+# Route for sending daily utilization data to frontend
+@back_bp.route('/api/daily_utilization')
+def send_daily_utilization():
+    global total_seats
+    # Change this number to the actual number of seats in the library
+    total_seats = 5190
+    # 获取当前日期
+    current_date = datetime.now().date()
+
+    # 获取前七天日期列表
+    date_list = [current_date - timedelta(days=i) for i in range(7, 0, -1)]
+
+    # 查询前七天的入馆次数数据
+    allnums_list = []
+    for date in date_list:
+        # 构建查询语句
+        query = f'SELECT allnum FROM {table_name} WHERE CAST(date AS DATE) = ?'
+        # 执行查询
+        cursor = cnxn_daily.cursor()
+        cursor.execute(query, date)
+        # 获取结果
+        result = cursor.fetchone()
+        if result:
+            allnums_list.append(result[0])
+        else:
+            allnums_list.append(0)
+    # 计算百分比
+    # percentage_list = [round(num / total_seats * 100, 2) for num in allnums_list]
+    # 构建返回给前端的数据格式
+    echart = {
+        'title': '近七天入馆次数统计',
+        'names': "日期",
+        'xAxis': [date.strftime('%Y-%m-%d') for date in date_list],
+        'data': allnums_list,
+    }
+
     return jsonify(echart)

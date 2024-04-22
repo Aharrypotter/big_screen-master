@@ -246,7 +246,7 @@ function updateChart32() {
 function echarts4() {
   // 基于准备好的dom，初始化echarts实例
   echarts_4 = echarts.init(document.getElementById("echart4"));
-  $.get("/api/hourly_utilization").done(function (data) {
+  $.get("/api/daily_utilization").done(function (data) {
     // 根据获取的数据更新图表的配置项和数据
     var option = {
       tooltip: {
@@ -261,7 +261,7 @@ function echarts4() {
           for (var i = 0; i < params.length; i++) {
             var seriesName = params[i].seriesName; // 系列名称
             var value = params[i].value; // 数据值
-            result += seriesName + ": " + value + "%<br/>"; // 拼接每个系列的名称和数据值
+            result += seriesName + ": " + value + "<br/>"; // 拼接每个系列的名称和数据值
           }
           return result;
         },
@@ -288,7 +288,7 @@ function echarts4() {
               color: "rgba(255,255,255,.2)",
             },
           },
-          data: data.data,
+          data: data.xAxis,
         },
         {
           axisPointer: { show: false },
@@ -301,7 +301,7 @@ function echarts4() {
         {
           type: "value",
           min: 0, // 设置最小值为0
-          max: 100, // 设置最大值为100
+          max: 10000, // 设置最大值为100
           axisTick: { show: false },
           axisLine: {
             lineStyle: {
@@ -309,7 +309,7 @@ function echarts4() {
             },
           },
           axisLabel: {
-            formatter: "{value}%", // 设置刻度标签的格式为百分比形式
+            formatter: "{value}", // 设置刻度标签的格式为百分比形式
             textStyle: {
               color: "rgba(255,255,255,.6)",
               fontSize: 12,
@@ -332,7 +332,7 @@ function echarts4() {
       },
       series: [
         {
-          name: "时段在馆人数/总座位数",
+          name: "近期一周入馆人流量变化情况",
           type: "line",
           smooth: true,
           symbol: "circle",
@@ -377,7 +377,7 @@ function echarts4() {
           label: {
             show: true, // 显示标签
             position: "top", // 标签位置，默认值是 'top'
-            formatter: "{c}%", // 标签格式化函数，这里表示显示数据值并加上百分号
+            formatter: "{c}", // 标签格式化函数，这里表示显示数据值并加上百分号
             textStyle: {
               color: "rgba(255, 255, 255, .7)", // 标签文字颜色
               fontSize: 12, // 标签文字字号
@@ -395,7 +395,7 @@ function echarts4() {
 }
 function updateChart4() {
   // 发起异步请求获取数据
-  $.get("/api/hourly_utilization").done(function (data) {
+  $.get("/api/daily_utilization").done(function (data) {
     // 根据获取的数据更新图表的配置项和数据
     var option = {
       // 更新x轴数据
