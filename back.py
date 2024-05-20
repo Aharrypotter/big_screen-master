@@ -19,6 +19,7 @@ password = 'skevisit_2017'
 connectionString = f'DRIVER=ODBC Driver 17 for SQL Server;SERVER={server};DATABASE={database};UID={username};PWD={password}'
 cnxn = pyodbc.connect(connectionString)
 cnxn_daily = pyodbc.connect(connectionString)
+cnxn_library_stats = pyodbc.connect(connectionString)
 
 view_name = "todayinoutnum"
 table_name = "vw_day_stat_in"
@@ -75,22 +76,25 @@ back_bp = Blueprint('back', __name__)
 @back_bp.route('/api/dept_inlib')
 def send_dept_inlib():
     # Read departmental in-library numbers from SQL Server
-    cursor = cnxn.cursor()
-    cursor.execute(f'SELECT dept, inlibrary FROM {view_name}')
-    dept_inlib = cursor.fetchall()
-    
-    data = []
-    for dept, inlib in dept_inlib:
-        data.append({"name": dept, "value": inlib})
-    # 根据 value 排序
-    sorted_data = sorted(data, key=lambda x: x['value'], reverse=True)
-    # 只保留前十个数据
-    top_ten_data = sorted_data[:10]
-    echart = {
-        'title': '图书馆各学院在馆人数TOP10',
-        'xAxis': [i.get("name") for i in top_ten_data],
-        'data': top_ten_data,
-    }
+    try:
+        cursor = cnxn.cursor()
+        cursor.execute(f'SELECT dept, inlibrary FROM {view_name}')
+        dept_inlib = cursor.fetchall()
+        
+        data = []
+        for dept, inlib in dept_inlib:
+            data.append({"name": dept, "value": inlib})
+        # 根据 value 排序
+        sorted_data = sorted(data, key=lambda x: x['value'], reverse=True)
+        # 只保留前十个数据
+        top_ten_data = sorted_data[:10]
+        echart = {
+            'title': '图书馆各学院在馆人数TOP10',
+            'xAxis': [i.get("name") for i in top_ten_data],
+            'data': top_ten_data,
+        }
+    finally:
+        cursor.close()
     return jsonify(echart)
 
 # Route for sending library stats to frontend
@@ -98,19 +102,22 @@ def send_dept_inlib():
 def send_library_stats():
     global total_inlib, total_seats
     total_seats = 5190
-    cursor = cnxn.cursor()
-    cursor.execute(f'SELECT SUM(inlibrary) as total_inlib FROM {view_name}')
-    total_inlib = cursor.fetchall()[0][0]
-    data = [
-        {"name": "在馆人数", "value": total_inlib},
-        {"name": "空闲座位数", "value": total_seats - total_inlib}
-    ]
-    echart = {
-        'title': '当前图书馆在馆人数情况',
-        'xAxis': [i.get("name") for i in data],
-        # 'data': [i.get("value") for i in data],
-        'data': data, #去查看echart示例，看看官方是如何调用数据的（调用数据的格式）
-    }
+    try:
+        cursor = cnxn_library_stats.cursor()
+        cursor.execute(f'SELECT SUM(inlibrary) as total_inlib FROM {view_name}')
+        total_inlib = cursor.fetchall()[0][0]
+        data = [
+            {"name": "在馆人数", "value": total_inlib},
+            {"name": "空闲座位数", "value": total_seats - total_inlib}
+        ]
+        echart = {
+            'title': '当前图书馆在馆人数情况',
+            'xAxis': [i.get("name") for i in data],
+            # 'data': [i.get("value") for i in data],
+            'data': data, #去查看echart示例，看看官方是如何调用数据的（调用数据的格式）
+        }
+    finally:
+        cursor.close()
     return jsonify(echart)
 
 # Route for sending hourly utilization data to frontend
@@ -139,21 +146,23 @@ def send_daily_utilization():
 
     # 获取前七天日期列表
     date_list = [current_date - timedelta(days=i) for i in range(7, 0, -1)]
-
+    print(date_list)
     # 查询前七天的入馆次数数据
     allnums_list = []
     for date in date_list:
         # 构建查询语句
         query = f'SELECT allnum FROM {table_name} WHERE CAST(date AS DATE) = ?'
         # 执行查询
-        cursor = cnxn_daily.cursor()
-        cursor.execute(query, date)
-        # 获取结果
-        result = cursor.fetchone()
-        if result:
-            allnums_list.append(result[0])
-        else:
-            allnums_list.append(0)
+        with cnxn_daily.cursor() as cursor:
+            print(date)
+            cursor.execute(query, date)
+            # 获取结果
+            result = cursor.fetchone()
+            print(result)
+            if result:
+                allnums_list.append(result[0])
+            else:
+                allnums_list.append(0)
     # 计算百分比
     # percentage_list = [round(num / total_seats * 100, 2) for num in allnums_list]
     # 构建返回给前端的数据格式
@@ -163,5 +172,5 @@ def send_daily_utilization():
         'xAxis': [date.strftime('%Y-%m-%d') for date in date_list],
         'data': allnums_list,
     }
-
+    print(echart)
     return jsonify(echart)

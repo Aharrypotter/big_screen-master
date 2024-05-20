@@ -7,7 +7,7 @@ app.register_blueprint(back_bp)
 @app.route('/')
 def index():
     data = SourceData()
-    start_threads()
+    # start_threads()
     return render_template('index.html', form=data, title='空间利用率情况展示')
 
 
